@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.HuihuangchengjiuDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.huihuangchengjiu_name as huihuangchengjiuName
+        ,a.huihuangchengjiu_uuid_number as huihuangchengjiuUuidNumber
+        ,a.huihuangchengjiu_photo as huihuangchengjiuPhoto
+        ,a.huihuangchengjiu_types as huihuangchengjiuTypes
+        ,a.huihuangchengjiu_file as huihuangchengjiuFile
+        ,a.huihuangchengjiu_clicknum as huihuangchengjiuClicknum
+        ,a.huihuangchengjiu_content as huihuangchengjiuContent
+        ,a.shangxia_types as shangxiaTypes
+        ,a.huihuangchengjiu_delete as huihuangchengjiuDelete
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.HuihuangchengjiuView" >
+        SELECT
+        <include refid="Base_Column_List" />
+
+--         级联表的字段
+
+        FROM huihuangchengjiu  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.huihuangchengjiuName != '' and params.huihuangchengjiuName != null and params.huihuangchengjiuName != 'null' ">
+                and a.huihuangchengjiu_name like CONCAT('%',#{params.huihuangchengjiuName},'%')
+            </if>
+            <if test=" params.huihuangchengjiuUuidNumber != '' and params.huihuangchengjiuUuidNumber != null and params.huihuangchengjiuUuidNumber != 'null' ">
+                and a.huihuangchengjiu_uuid_number like CONCAT('%',#{params.huihuangchengjiuUuidNumber},'%')
+            </if>
+            <if test="params.huihuangchengjiuTypes != null and params.huihuangchengjiuTypes != ''">
+                and a.huihuangchengjiu_types = #{params.huihuangchengjiuTypes}
+            </if>
+            <if test="params.huihuangchengjiuClicknumStart != null and params.huihuangchengjiuClicknumStart != ''">
+                <![CDATA[  and a.huihuangchengjiu_clicknum >= #{params.huihuangchengjiuClicknumStart}   ]]>
+            </if>
+            <if test="params.huihuangchengjiuClicknumEnd != null and params.huihuangchengjiuClicknumEnd != ''">
+                <![CDATA[  and a.huihuangchengjiu_clicknum <= #{params.huihuangchengjiuClicknumEnd}   ]]>
+            </if>
+             <if test="params.huihuangchengjiuClicknum != null and params.huihuangchengjiuClicknum != ''">
+                and a.huihuangchengjiu_clicknum = #{params.huihuangchengjiuClicknum}
+             </if>
+            <if test=" params.huihuangchengjiuContent != '' and params.huihuangchengjiuContent != null and params.huihuangchengjiuContent != 'null' ">
+                and a.huihuangchengjiu_content like CONCAT('%',#{params.huihuangchengjiuContent},'%')
+            </if>
+            <if test="params.shangxiaTypes != null and params.shangxiaTypes != ''">
+                and a.shangxia_types = #{params.shangxiaTypes}
+            </if>
+            <if test="params.huihuangchengjiuDeleteStart != null and params.huihuangchengjiuDeleteStart != ''">
+                <![CDATA[  and a.huihuangchengjiu_delete >= #{params.huihuangchengjiuDeleteStart}   ]]>
+            </if>
+            <if test="params.huihuangchengjiuDeleteEnd != null and params.huihuangchengjiuDeleteEnd != ''">
+                <![CDATA[  and a.huihuangchengjiu_delete <= #{params.huihuangchengjiuDeleteEnd}   ]]>
+            </if>
+             <if test="params.huihuangchengjiuDelete != null and params.huihuangchengjiuDelete != ''">
+                and a.huihuangchengjiu_delete = #{params.huihuangchengjiuDelete}
+             </if>
+
+        </where>
+
+        order by a.${params.orderBy} desc 
+    </select>
+
+</mapper>
